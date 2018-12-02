@@ -1,6 +1,7 @@
 package com.essnn.shouyinji;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,10 @@ import com.essnn.shouyinji.adapter.BuyAdapter;
 import com.essnn.shouyinji.adapter.ShopAdapter;
 import com.essnn.shouyinji.entity.BuyData;
 import com.essnn.shouyinji.entity.ShopData;
+import com.essnn.shouyinji.fragment.MaFragment;
+import com.essnn.shouyinji.fragment.PayFragment;
+import com.essnn.shouyinji.fragment.SaoFragment;
+import com.essnn.shouyinji.fragment.XianFragment;
 import com.essnn.shouyinji.utils.CallBackInterface;
 
 import org.w3c.dom.Text;
@@ -48,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
 
     private TabLayout tabLayout;
 
+    PayFragment payFragment;
+    XianFragment xianFragment;
+    SaoFragment saoFragment;
+    MaFragment maFragment;
+
     private String[] titles = new String[]{"全部","零食","小吃"};
 
     @Override
@@ -68,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         buy_jiesuan.setText("结算(0)");
 
         text_clear.setOnClickListener(this);
+        buy_jiesuan.setOnClickListener(this);
 
         for (int i = 0; i < titles.length ; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -136,7 +147,14 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         mBuyAdapter = new BuyAdapter(this, mBuy,this);
         //设置适配器
         mListView.setAdapter(mBuyAdapter);
-
+        //test
+//        xianFragment = new XianFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("message","100");
+//        xianFragment.setArguments(bundle);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.add(R.id.pay_fragment,xianFragment).commit();
+//        mGridView.setVisibility(View.INVISIBLE);
     }
 
     private void get_zongnum() {
@@ -162,6 +180,40 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         get_zongji();
     }
 
+    public void get_buy(){
+
+    }
+
+    public void go_pay(int i){
+        switch (i){
+            case 0:
+                if(xianFragment==null){
+                    xianFragment = new XianFragment();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,xianFragment).commit();
+                break;
+            case 1:
+                if(saoFragment==null){
+                    saoFragment = new SaoFragment();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,saoFragment).commit();
+                break;
+            case 2:
+                if(maFragment==null){
+                    maFragment = new MaFragment();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,maFragment).commit();
+                break;
+        }
+    }
+
+    public void close_f(){
+        getSupportFragmentManager().beginTransaction().remove(xianFragment).commit();
+        getSupportFragmentManager().beginTransaction().remove(payFragment).commit();
+        mGridView.setVisibility(View.VISIBLE);
+        xianFragment = null;
+    }
+
     private void get_zongji() {
         buy_zongji = new BigDecimal(0);
         for (int i = 0; i < mBuy.size(); i++) {
@@ -184,6 +236,20 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                 break;
             case R.id.text_huiyuan:
 
+                break;
+            case R.id.buy_jiesuan:
+                if(xianFragment==null){
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    xianFragment = new XianFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("message",buy_zongji+"");
+                    xianFragment.setArguments(bundle);
+                    ft.add(R.id.xianjin_fragment,xianFragment).commit();
+                    mGridView.setVisibility(View.INVISIBLE);
+
+                    payFragment = new PayFragment();
+                    getSupportFragmentManager().beginTransaction().add(R.id.pay_fragment,payFragment).commit();
+                }
                 break;
         }
     }

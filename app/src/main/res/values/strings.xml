@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">shouyinji</string>
+    <string name="xianjin">现金</string>
+    <string name="saoma">扫码</string>
+    <string name="erweima">二维码</string>
+    <string name="yingshuo">应收金额</string>
+    <string name="shishuo">实收</string>
+    <string name="zhaolin">找零</string>
+    <string name="jiesuan">结算</string>
 </resources>
