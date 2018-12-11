@@ -2,17 +2,13 @@ package com.essnn.shouyinji;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.essnn.shouyinji.adapter.BuyAdapter;
 import com.essnn.shouyinji.adapter.ShopAdapter;
@@ -22,16 +18,20 @@ import com.essnn.shouyinji.fragment.MaFragment;
 import com.essnn.shouyinji.fragment.PayFragment;
 import com.essnn.shouyinji.fragment.SaoFragment;
 import com.essnn.shouyinji.fragment.XianFragment;
-import com.essnn.shouyinji.utils.CallBackInterface;
+import com.essnn.shouyinji.ui.BaseActivity;
+import com.essnn.shouyinji.utils.AddShop;
+import com.essnn.shouyinji.utils.GoPay;
+import com.essnn.shouyinji.utils.MessageEvent;
 
-import org.w3c.dom.Text;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements CallBackInterface, View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     //列表
     private GridView mGridView;
     //数据
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
         findView();
     }
 
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         });
 
         mListView = findViewById(R.id.mListView);
-        mBuyAdapter = new BuyAdapter(this, mBuy,this);
+        mBuyAdapter = new BuyAdapter(this, mBuy);
         //设置适配器
         mListView.setAdapter(mBuyAdapter);
         //test
@@ -161,58 +162,7 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
         buy_jiesuan.setText("结算("+mBuy.size()+")" );
     }
 
-    @Override
-    public void callBackClick(int i,int tpye) {
-        int num;
-        if(tpye == 1){
-            if(mBuy.get(i).getNum()==1){
-                return;
-            }
-            num = mBuy.get(i).getNum() - 1;
-        }else{
-            num = mBuy.get(i).getNum() + 1;
-        }
-        BigDecimal danjia = mBuy.get(i).getMon();
-        BigDecimal zongji = new BigDecimal(num).multiply(danjia);
-        mBuy.get(i).setNum(num);
-        mBuy.get(i).setZongjia(zongji);
-        mBuyAdapter.notifyDataSetChanged();
-        get_zongji();
-    }
 
-    public void get_buy(){
-
-    }
-
-    public void go_pay(int i){
-        switch (i){
-            case 0:
-                if(xianFragment==null){
-                    xianFragment = new XianFragment();
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,xianFragment).commit();
-                break;
-            case 1:
-                if(saoFragment==null){
-                    saoFragment = new SaoFragment();
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,saoFragment).commit();
-                break;
-            case 2:
-                if(maFragment==null){
-                    maFragment = new MaFragment();
-                }
-                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,maFragment).commit();
-                break;
-        }
-    }
-
-    public void close_f(){
-        getSupportFragmentManager().beginTransaction().remove(xianFragment).commit();
-        getSupportFragmentManager().beginTransaction().remove(payFragment).commit();
-        mGridView.setVisibility(View.VISIBLE);
-        xianFragment = null;
-    }
 
     private void get_zongji() {
         buy_zongji = new BigDecimal(0);
@@ -251,6 +201,67 @@ public class MainActivity extends AppCompatActivity implements CallBackInterface
                     getSupportFragmentManager().beginTransaction().add(R.id.pay_fragment,payFragment).commit();
                 }
                 break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void get_addshop(AddShop addShop) {
+        int i = addShop.getI();
+        int type = addShop.getType();
+        int num;
+        if(type == 1){
+            if(mBuy.get(i).getNum()==1){
+                return;
+            }
+            num = mBuy.get(i).getNum() - 1;
+        }else{
+            num = mBuy.get(i).getNum() + 1;
+        }
+        BigDecimal danjia = mBuy.get(i).getMon();
+        BigDecimal zongji = new BigDecimal(num).multiply(danjia);
+        mBuy.get(i).setNum(num);
+        mBuy.get(i).setZongjia(zongji);
+        mBuyAdapter.notifyDataSetChanged();
+        get_zongji();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(MessageEvent messageEvent){
+        getSupportFragmentManager().beginTransaction().remove(xianFragment).commit();
+        getSupportFragmentManager().beginTransaction().remove(payFragment).commit();
+        mGridView.setVisibility(View.VISIBLE);
+        xianFragment = null;
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void get_gopay(GoPay goPay){
+        int i = goPay.getPay();
+        switch (i){
+            case 0:
+                if(xianFragment==null){
+                    xianFragment = new XianFragment();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,xianFragment).commit();
+                break;
+            case 1:
+                if(saoFragment==null){
+                    saoFragment = new SaoFragment();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,saoFragment).commit();
+                break;
+            case 2:
+                if(maFragment==null){
+                    maFragment = new MaFragment();
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.xianjin_fragment,maFragment).commit();
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
         }
     }
 }

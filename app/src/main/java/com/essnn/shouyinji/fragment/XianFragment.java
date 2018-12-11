@@ -8,14 +8,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.essnn.shouyinji.R;
-import com.essnn.shouyinji.utils.CallBackInterface;
+import com.essnn.shouyinji.utils.MessageEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigDecimal;
 
@@ -24,7 +24,6 @@ public class XianFragment extends Fragment implements View.OnClickListener {
     String message;
     private EditText valYingshou,valShishou,valZhaolin;
     private TextView addEight,addSeven,addDian,jiesuan,addThree,addSix,addTwo,addFive,addZero,addOne,addFour,remove,addNine;
-    private CallBackInterface mCallBackInterface;
     private ImageView close;
 
     @Nullable
@@ -36,7 +35,6 @@ public class XianFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView(View view){
-        mCallBackInterface = (CallBackInterface) getActivity();
         valYingshou = (EditText) view.findViewById(R.id.val_yingshou);
         valShishou = (EditText) view.findViewById(R.id.val_shishou);
         valZhaolin = (EditText) view.findViewById(R.id.val_zhaolin);
@@ -126,7 +124,7 @@ public class XianFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.close:
-                mCallBackInterface.close_f();
+                EventBus.getDefault().post(new MessageEvent());
                 break;
         }
     }

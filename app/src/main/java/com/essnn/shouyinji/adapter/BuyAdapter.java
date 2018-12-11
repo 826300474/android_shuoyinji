@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.essnn.shouyinji.R;
 import com.essnn.shouyinji.entity.BuyData;
-import com.essnn.shouyinji.utils.CallBackInterface;
+import com.essnn.shouyinji.utils.AddShop;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -20,11 +22,9 @@ public class BuyAdapter extends BaseAdapter {
     private List<BuyData> mList;
     private LayoutInflater inflater;
     private BuyData data;
-    private CallBackInterface mCallBackInterface;
-    public BuyAdapter(Context mContext, List<BuyData> mList,CallBackInterface mCallBackInterface){
+    public BuyAdapter(Context mContext, List<BuyData> mList){
         this.mContext = mContext;
         this.mList = mList;
-        this.mCallBackInterface = mCallBackInterface;
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -69,13 +69,13 @@ public class BuyAdapter extends BaseAdapter {
         viewHolder.num_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallBackInterface.callBackClick(i,0);
+                EventBus.getDefault().post(new AddShop(i,0));
             }
         });
         viewHolder.num_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallBackInterface.callBackClick(i,1);
+                EventBus.getDefault().post(new AddShop(i,1));
             }
         });
 

@@ -10,23 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.essnn.shouyinji.R;
-import com.essnn.shouyinji.utils.CallBackInterface;
+import com.essnn.shouyinji.utils.GoPay;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class PayFragment extends Fragment {
-    private CallBackInterface mCallBackInterface;
     private TabLayout tabLayout;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pay,container,false);
-        mCallBackInterface = (CallBackInterface) getActivity();
-
         tabLayout = view.findViewById(R.id.mTabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int i = tab.getPosition();
-                mCallBackInterface.go_pay(i);
+                EventBus.getDefault().post(new GoPay(i));
+//                mCallBackInterface.go_pay(i);
             }
 
             @Override
@@ -41,4 +41,5 @@ public class PayFragment extends Fragment {
         });
         return view;
     }
+
 }
