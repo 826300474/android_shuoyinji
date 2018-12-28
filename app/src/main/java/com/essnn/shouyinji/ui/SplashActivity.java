@@ -3,9 +3,11 @@ package com.essnn.shouyinji.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.essnn.shouyinji.MainActivity;
 import com.essnn.shouyinji.R;
+import com.essnn.shouyinji.utils.ShareUtils;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -40,7 +42,12 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onNext(Long aLong) {
-                startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                if(isLogin()){
+                    startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                }else{
+                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                }
+                finish();
             }
         });
     }
@@ -49,5 +56,13 @@ public class SplashActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         subscription.unsubscribe();
+    }
+
+    private boolean isLogin(){
+        if(ShareUtils.getString(this,"username","") != ""){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

@@ -6,10 +6,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.essnn.shouyinji.R;
+import com.essnn.shouyinji.R2;
 import com.essnn.shouyinji.adapter.HaveshopAdapter;
 import com.essnn.shouyinji.adapter.ZhangAdapter;
 import com.essnn.shouyinji.entity.HaveshopData;
@@ -19,18 +21,32 @@ import com.essnn.shouyinji.entity.ZhangData;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class ZhangActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ZhangAdapter mZhangAdapter;
     private LinearLayoutManager mLayoutManager;
     private List<ZhangData> mList = new ArrayList<>();
     private List<HaveshopData> mHaveshopDataList = new ArrayList<>();
+    @BindView(R.id.title)
+    TextView title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zhang);
+        ButterKnife.bind(this);
+        title.setText("账单");
         init();
         getshop();
+    }
+
+    @OnClick(R.id.go_back)
+    public void goBack(){
+        finish();
     }
 
     private void getshop() {

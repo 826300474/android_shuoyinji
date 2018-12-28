@@ -7,19 +7,18 @@
     tools:context=".MainActivity"
     tools:layout_editor_absoluteY="73dp">
 
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/mGridView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#e5e5e5"
-        android:horizontalSpacing="5dp"
-        android:numColumns="4"
-        android:padding="5dp"
-        android:verticalSpacing="5dp"
+        android:paddingRight="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/mListView"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+        app:layout_constraintTop_toTopOf="@+id/xianjin_fragment"
+        app:layout_constraintVertical_bias="0.0" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -34,8 +33,9 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -73,10 +73,10 @@
         android:layout_height="40dp"
         app:layout_constraintBottom_toTopOf="@+id/mGridView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toTopOf="@+id/pay_fragment"
+        app:layout_constraintVertical_bias="0.142"
         app:tabMode="scrollable"></android.support.design.widget.TabLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -130,11 +130,12 @@
     <FrameLayout
         android:id="@+id/pay_fragment"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tabLayout"
-        app:layout_constraintEnd_toEndOf="@+id/tabLayout"
-        app:layout_constraintStart_toStartOf="@+id/tabLayout"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="40dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/xianjin_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/mListView"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
     </FrameLayout>
 
@@ -142,10 +143,51 @@
         android:id="@+id/xianjin_fragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/pay_fragment"></FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/pay_fragment">
+
+    </FrameLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="@+id/tabLayout"
+        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/shezhi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="设置"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toEndOf="@+id/zhangdan"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.551" />
+
+    <TextView
+        android:id="@+id/zhangdan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:text="账单"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toStartOf="@+id/shezhi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.551" />
 
 </android.support.constraint.ConstraintLayout>

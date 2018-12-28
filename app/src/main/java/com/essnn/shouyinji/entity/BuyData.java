@@ -2,6 +2,8 @@ package com.essnn.shouyinji.entity;
 
 import java.math.BigDecimal;
 
+import cn.bmob.v3.BmobUser;
+
 public class BuyData {
     private String name;
     private BigDecimal mon;
