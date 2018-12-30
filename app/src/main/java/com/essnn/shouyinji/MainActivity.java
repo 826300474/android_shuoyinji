@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.essnn.shouyinji.adapter.BuyAdapter;
+import com.essnn.shouyinji.adapter.ShoopAdapter;
 import com.essnn.shouyinji.adapter.ShopAdapter;
 import com.essnn.shouyinji.entity.BuyData;
 import com.essnn.shouyinji.entity.NavData;
@@ -59,7 +60,7 @@ public class MainActivity extends BasePrintActivity implements View.OnClickListe
     //数据
     private List<ShopData> mList = new ArrayList<>();
     //适配器
-    private ShopAdapter mShopAdapter;
+    private ShoopAdapter mShopAdapter;
 
     private ListView mListView;
 
@@ -138,62 +139,63 @@ public class MainActivity extends BasePrintActivity implements View.OnClickListe
             }
         });
 
+//        for (int i = 0; i < 5; i++) {
+//            ShopData data = new ShopData();
+//            data.setName("555");
+//            mList.add(data);
+//        }
 
-        GridLayoutManager manager = new GridLayoutManager(getApplicationContext(),4);
-        mShopAdapter = new ShopAdapter(R.layout.shop_item,mList);
-        mGridView.setLayoutManager(manager);
-        mGridView.setAdapter(mShopAdapter);
-        mShopAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        //商品适配器
+//        GridLayoutManager manager = new GridLayoutManager(getApplicationContext(),4);
+//        mShopAdapter = new ShopAdapter(R.layout.shop_item,mList);
+//        mGridView.setLayoutManager(manager);
+//        mGridView.setAdapter(mShopAdapter);
+//        mShopAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+
+
 
         BmobQuery<ShopData> query = new BmobQuery<ShopData>();
         query.addWhereEqualTo("username","18367458480").findObjects(new FindListener<ShopData>() {
             @Override
             public void done(List<ShopData> list, BmobException e) {
                 mList = list;
-                mShopAdapter.addData(list);
+                mShopAdapter = new ShoopAdapter(getApplicationContext(),mList);
+                mGridView.setLayoutManager(new GridLayoutManager(getApplicationContext(),4));
+                mGridView.setAdapter(mShopAdapter);
             }
         });
-
-        mShopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int i) {
-                ShopData shopdata = mList.get(i);
-                for (int j = 0; j < mBuy.size(); j++) {
-                    if(mBuy.get(j).getName() == shopdata.getName()){
-                        int num = mBuy.get(j).getNum() + 1;
-                        BigDecimal danjia = mBuy.get(j).getMon();
-                        BigDecimal zongji = new BigDecimal(num).multiply(danjia);
-                        mBuy.get(j).setNum(num);
-                        mBuy.get(j).setZongjia(zongji);
-                        mBuyAdapter.notifyDataSetChanged();
-                        get_zongji();
-                        return;
-                    }
-                }
-                BuyData buyData = new BuyData();
-                buyData.setName(shopdata.getName());
-                buyData.setMon(new BigDecimal(String.valueOf(shopdata.getMoney())));
-                buyData.setNum(1);
-                buyData.setZongjia(new BigDecimal(String.valueOf(shopdata.getMoney())));
-                mBuy.add(0,buyData);
-                mBuyAdapter.notifyDataSetChanged();
-                get_zongji();
-                get_zongnum();
-            }
-        });
+//
+//        mShopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(BaseQuickAdapter adapter, View view, int i) {
+//                ShopData shopdata = mList.get(i);
+//                for (int j = 0; j < mBuy.size(); j++) {
+//                    if(mBuy.get(j).getName() == shopdata.getName()){
+//                        int num = mBuy.get(j).getNum() + 1;
+//                        BigDecimal danjia = mBuy.get(j).getMon();
+//                        BigDecimal zongji = new BigDecimal(num).multiply(danjia);
+//                        mBuy.get(j).setNum(num);
+//                        mBuy.get(j).setZongjia(zongji);
+//                        mBuyAdapter.notifyDataSetChanged();
+//                        get_zongji();
+//                        return;
+//                    }
+//                }
+//                BuyData buyData = new BuyData();
+//                buyData.setName(shopdata.getName());
+//                buyData.setMon(new BigDecimal(String.valueOf(shopdata.getMoney())));
+//                buyData.setNum(1);
+//                buyData.setZongjia(new BigDecimal(String.valueOf(shopdata.getMoney())));
+//                mBuy.add(0,buyData);
+//                mBuyAdapter.notifyDataSetChanged();
+//                get_zongji();
+//                get_zongnum();
+//            }
+//        });
 
 
         mBuyAdapter = new BuyAdapter(this, mBuy);
-        //设置适配器
         mListView.setAdapter(mBuyAdapter);
-        //test
-//        xianFragment = new XianFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("message","100");
-//        xianFragment.setArguments(bundle);
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(R.id.pay_fragment,xianFragment).commit();
-//        mGridView.setVisibility(View.INVISIBLE);
     }
     //设置导航
     private void setShop(int i){
